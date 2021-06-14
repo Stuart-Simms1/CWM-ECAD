@@ -29,15 +29,15 @@ module doorbell(
     );
     
     //Todo: define registers and wires here
-	reg out;
+	reg out; 	//Since the output has to maintain its value it must be a reg
 
     //Todo: define your logic here
-	always @ (*) begin
-	#5;
-	if (sel)
-	out = b;
-	else
-	out = a;
+	always @ (*) begin		//do the assignment on any event * occuring
+		#5;		//Required 5 tick delay between input change and output change
+		if (sel)
+			out = b;	//Sets output to B if sel is 1
+		else
+			out = a;	//Sets output to A if sel is 0
 	end
       
 endmodule
