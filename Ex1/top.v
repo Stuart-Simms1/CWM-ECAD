@@ -33,6 +33,6 @@ module blinds(
     wire   out;
          
       //Todo: add you logic here
-	assign out = func[2*a + b];
+	assign out = func[(a << 1) + b];
 
 endmodule
