@@ -41,14 +41,14 @@ module monitor (
 		end
 		else begin 
 			if (change) begin
-      			if (on_off) begin
-         			direction = 2'b01;
-         			counter_out <= counter_out + 8'b1;
-      			end
-      			else begin
-         			direction = 2'b10;
-         			counter_out <= counter_out - 8'b1;
-      			end
+      				if (on_off) begin
+         				direction = 2'b01;
+         				counter_out <= counter_out + 8'b1;
+      				end
+      				else begin
+         				direction = 2'b10;
+         				counter_out <= counter_out - 8'b1;
+      				end
       		end
       		else begin
     	  		direction = 2'b00;
