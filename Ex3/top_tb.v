@@ -36,39 +36,59 @@ module top_tb(
 			data[2] = 1;
 			data[1] = 1;
 			data[0] = 1;
-			#(5*CLK_PERIOD);
+			#(4*CLK_PERIOD);
 			data[2] = 0;
 			data[0] = 1;
-			#(20*CLK_PERIOD);
+			#(5*CLK_PERIOD);
 			data[0] = 0;
-			#(20*CLK_PERIOD);
-			data[1] = 0;			
+			#(7*CLK_PERIOD);
+			data[1] = 0;
+			#(5*CLK_PERIOD);		
 			end
 		end
 		initial begin
-			err = 1'b0; // start with no errors
+			err = 0; // start with no errors
+			#(CLK_PERIOD>>1);
 			forever begin
-				#CLK_PERIOD;
+				#(CLK_PERIOD>>1);
 				if (data[2]) begin
 					if(counter_out) begin
 						$display("Error in Reset");
 						err = 1;
 					end
+					else begin
+						err = 0;
+					end
 				end
 				else begin
-					if(data[1] && (direction == 2'b00)) begin
-						$display("Error in change");
-						err = 1;
-					end
-					else begin
-						if(data[0] && (direction != 2'b01)) begin
-							$display("Error in on_off, on");
+					if(~data[1]) begin
+						if (direction != 2'b00) begin
+							$display("Error in change");
 							err = 1;
 						end
 						else begin
-							if(~data[0] && (direction != 2'b10)) begin
-								$display("Error in on_off, off");
+							err = 0;
+						end
+					end
+					else begin
+						if(data[0]) begin
+							if(direction != 2'b01) begin
+								$display("Error in on_off, on");
 								err = 1;
+							end
+							else begin
+								err = 0;
+							end
+						end
+						else begin
+							if(~data[0]) begin
+								if(direction != 2'b10) begin
+									$display("Error in on_off, off");
+									err = 1;
+								end
+								else begin
+									err = 0;
+								end
 							end
 							else begin
 								err = 0;		//sometimes the error detection occurs between clock cycles so it can register an error where there is none, this resolves that.

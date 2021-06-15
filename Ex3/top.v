@@ -43,24 +43,17 @@ module monitor (
 			if (change) begin
       			if (on_off) begin
          			direction = 2'b01;
+         			counter_out <= counter_out + 8'b1;
       			end
       			else begin
          			direction = 2'b10;
+         			counter_out <= counter_out - 8'b1;
       			end
       		end
       		else begin
     	  		direction = 2'b00;
+    	  		counter_out <= counter_out;
     	  	end
-    	  	if(direction == 2'b00) 
-     	 		counter_out <= counter_out;
-     	 	else begin
-      			if (direction == 2'b01) begin
-      				counter_out <= counter_out + 8'b1;
-      			end
-      			else begin
-      				counter_out <= counter_out - 8'b1;
-      			end
-      		end
-		end
+   		end
 	end
 endmodule
