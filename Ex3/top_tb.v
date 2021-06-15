@@ -18,7 +18,9 @@ module top_tb(
 
 	//Todo: Regitsers and wires
 	reg clk;
-	reg [2:0] data; // the msb is rst, middle bit is change, lsb is on_off
+	reg rst;
+	reg change;
+	reg on_off;
 	wire [7:0] counter_out;
 	reg err;
 	wire [1:0] direction;
@@ -33,65 +35,56 @@ module top_tb(
 	//Todo: User logic
 		initial begin		//this sets the data stream in to test
 			forever begin
-			data[2] = 1;
-			data[1] = 1;
-			data[0] = 1;
+			rst = 1;
+			change = 1;
+			on_off = 1;
 			#(4*CLK_PERIOD);
-			data[2] = 0;
-			data[0] = 1;
+			rst = 0;
+			on_off = 1;
 			#(5*CLK_PERIOD);
-			data[0] = 0;
+			on_off = 0;
 			#(7*CLK_PERIOD);
-			data[1] = 0;
+			change = 0;
 			#(5*CLK_PERIOD);		
 			end
 		end
 		initial begin
 			err = 0; // start with no errors
-			#(CLK_PERIOD>>1);
+			#(CLK_PERIOD);
 			forever begin
-				#(CLK_PERIOD>>1);
-				if (data[2]) begin
+				if (rst) begin
+					#(CLK_PERIOD)
 					if(counter_out) begin
 						$display("Error in Reset");
 						err = 1;
 					end
-					else begin
-						err = 0;
-					end
 				end
 				else begin
-					if(~data[1]) begin
+					#(CLK_PERIOD)
+					if(~change) begin
+						#(CLK_PERIOD)
 						if (direction != 2'b00) begin
 							$display("Error in change");
 							err = 1;
 						end
-						else begin
-							err = 0;
-						end
 					end
 					else begin
-						if(data[0]) begin
+						#(CLK_PERIOD)
+						if(on_off) begin
+							#(CLK_PERIOD)
 							if(direction != 2'b01) begin
 								$display("Error in on_off, on");
 								err = 1;
 							end
-							else begin
-								err = 0;
-							end
 						end
 						else begin
-							if(~data[0]) begin
+							#(CLK_PERIOD)
+							if(~on_off) begin
+								#(CLK_PERIOD)
 								if(direction != 2'b10) begin
 									$display("Error in on_off, off");
 									err = 1;
 								end
-								else begin
-									err = 0;
-								end
-							end
-							else begin
-								err = 0;		//sometimes the error detection occurs between clock cycles so it can register an error where there is none, this resolves that.
 							end
 						end
 					end
@@ -108,9 +101,9 @@ module top_tb(
 	
 	//Todo: Instantiate counter module
  	monitor top (
-	.rst  (data[2]),
-	.change (data[1]),
-	.on_off (data[0]),
+	.rst  (rst),
+	.change (change),
+	.on_off (on_off),
 	.clk (clk),
 	.counter_out (counter_out),
 	.direction (direction));
