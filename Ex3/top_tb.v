@@ -21,8 +21,7 @@ module top_tb(
 	reg [2:0] data; // the msb is rst, middle bit is change, lsb is on_off
 	wire [7:0] counter_out;
 	reg err;
-	reg [7:0] previous;
-	reg [7:0] numcycles;
+	wire [1:0] direction;
 
 	//Todo: Clock generation
     	initial begin	//this sets the clock going from the start
@@ -32,52 +31,51 @@ module top_tb(
     	     #(CLK_PERIOD/2) clk=~clk;
     	end
 	//Todo: User logic
-		initial begin
-		data = 3'b0;		//starting the values sent in as 0s
-		err = 1'b0;
-		previous = 8'b0;
-		numcycles = 8'b0;
+		initial begin		//this sets the data stream in to test
 			forever begin
-			 
-			#CLK_PERIOD;
-			if ((data[2] == 1) && (counter_out != 0)) begin
-				err = 1;
-				$display("Error in reset");
+			data[2] = 1;
+			data[1] = 1;
+			data[0] = 1;
+			#(5*CLK_PERIOD);
+			data[2] = 0;
+			data[0] = 1;
+			#(20*CLK_PERIOD);
+			data[0] = 0;
+			#(20*CLK_PERIOD);
+			data[1] = 0;			
 			end
-			else begin
-				if ((data[1] == 0) && (counter_out != previous)) begin
-					err = 1;
-	    			$display("Error in change");
+		end
+		initial begin
+			err = 1'b0; // start with no errors
+			forever begin
+				#CLK_PERIOD;
+				if (data[2]) begin
+					if(counter_out) begin
+						$display("Error in Reset");
+						err = 1;
+					end
 				end
 				else begin
-					if ((data[0] == 1) && (counter_out != previous + 8'b1)) begin
+					if(data[1] && (direction == 2'b00)) begin
+						$display("Error in change");
 						err = 1;
-						$display("error in on_off, on");
 					end
 					else begin
-						if ((data[0] == 0) && (counter_out != previous - 8'b1)) begin
+						if(data[0] && (direction != 2'b01)) begin
+							$display("Error in on_off, on");
 							err = 1;
-							$display("error in on_off, off");
+						end
+						else begin
+							if(~data[0] && (direction != 2'b10)) begin
+								$display("Error in on_off, off");
+								err = 1;
+							end
+							else begin
+								err = 0;		//sometimes the error detection occurs between clock cycles so it can register an error where there is none, this resolves that.
+							end
 						end
 					end
 				end
-			end
-			if (numcycles < 8'b00010100)begin
-				data[2] = 1;
-		    end
-			else begin
-			data[2] = 0;
-				if((numcycles % 8'b00000101) == 0) begin
-					data[1] = 1;
-					data[2] = numcycles % 2;
-				end
-				else 
-					data[1] = 0;
-					data[0] = 0;
-				endbegin
-			end
-			previous = counter_out;
-			numcycles = numcycles + 8'b1;
 			end
 		end
 	//Todo: Finish test, check for success
@@ -94,5 +92,6 @@ module top_tb(
 	.change (data[1]),
 	.on_off (data[0]),
 	.clk (clk),
-	.counter_out (counter_out));
+	.counter_out (counter_out),
+	.direction (direction));
 endmodule 

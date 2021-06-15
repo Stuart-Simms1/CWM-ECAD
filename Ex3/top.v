@@ -24,28 +24,43 @@ module monitor (
 	input on_off,
 	input rst,
 	input clk,
-	output [7:0] counter_out
+	output reg [7:0] counter_out,
+	output reg [1:0] direction
     );
                     
     //Todo: add registers and wires, if needed
-	reg [7:0] counter_out;
-	reg [7:0] previous;
 
     //Todo: add user logic
-	initial begin
-		counter_out = 8'b0;
-	end
-	always @ (posedge clk)
-		if(rst)
-			counter_out = 8'b0;
-		else begin
-			if (change) begin
-				if(on_off)
-					counter_out = previous + 1;
-				else
-					counter_out = previous - 1;
+    initial begin
+    counter_out = 8'b0;
+    direction = 2'b0;
+    end
+	always @ (posedge clk) begin
+		if (rst) begin
+			counter_out <= 8'b0;
 		end
-	previous = counter_out;
+		else begin 
+			if (change) begin
+      			if (on_off) begin
+         			direction = 2'b01;
+      			end
+      			else begin
+         			direction = 2'b10;
+      			end
+      		end
+      		else begin
+    	  		direction = 2'b00;
+    	  	end
+    	  	if(direction == 2'b00) 
+     	 		counter_out <= counter_out;
+     	 	else begin
+      			if (direction == 2'b01) begin
+      				counter_out <= counter_out + 8'b1;
+      			end
+      			else begin
+      				counter_out <= counter_out - 8'b1;
+      			end
+      		end
+		end
 	end
-
 endmodule
