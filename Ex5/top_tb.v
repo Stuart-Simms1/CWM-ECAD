@@ -35,6 +35,10 @@ module top_tb();
 		state[1] = heating;
 		state[0] = cooling;
 		#CLK_PERIOD;
+		if(state == 2'b11) begin
+			$display("Error invalid state");
+			err = 1;
+		end
 		end
 	end
 	
