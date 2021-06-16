@@ -25,27 +25,29 @@ module lights(
 	
 	
 	initial begin	//to define colour from the beginning (not necessary as we reset it in the simulation immediately)
-	colour = 3'b001;
+	colour = 3'b000;
 	end
 	
 	always @(posedge clk) begin
 		if(rst) begin		//resetting takes precedence
-			colour <= 3'b001;
+			colour <= 3'b111;
 		end
 		else begin	
-			if((colour == 3'b000)||(colour == 3'b111)) begin	//dealing with the colours out of scope
-				colour <= 3'b001;					
+			if(button) begin
+				case(colour)
+				    3'b111 : colour <= 3'b001;
+				    3'b000 : colour <= 3'b001;
+				    3'b110 : colour <= 3'b001 ;					//110 + 1 would take us out of scope so set it to 001
+				    default : colour <= colour + 3'b1;			//works for all the other colours
+				endcase
+
 			end
 			else begin
-				if (button) begin
-					case(colour)
-						3'b110: colour <= 3'b001;				//110 + 1 would take us out of scope so set it to 001
-						default: colour <= colour + 3'b1;		//works for all the other colours
-					endcase
-				end
-				else begin
-					colour <= colour;							//keep it the same for no button push
-				end
+				case(colour)
+				3'b111: colour <= 3'b001;
+				3'b000: colour <= 3'b001;
+				default : ;
+				endcase
 			end
 		end
 	end
