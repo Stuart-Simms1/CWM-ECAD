@@ -27,7 +27,7 @@ module ACunit(
 	output cooling
    );
    
-    wire [4:0] temperature
+    wire [4:0] temperature;
 	assign temperature = {temperature_4, temperature_3, temperature_2, temperature_1, temperature_0};
    /* clock infrastructure, do not modify */
         wire clk_ibufds;
