@@ -51,13 +51,6 @@ module top_tb();
 			err=1;
 		end
 		
-		temperature = 5'b00000;
-		#CLK_PERIOD;
-		if(state != 2'b10) begin
-			$display("Error with beginning in heating state");
-			err = 1;
-		end
-		
 		temperature = 5'b10100;
 		#CLK_PERIOD;
 		if(state != 2'b00) begin
@@ -65,15 +58,26 @@ module top_tb();
 			err = 1;
 		end
 		
+		temperature = 5'b00000;
+		#CLK_PERIOD;
+		if(state != 2'b10) begin
+			$display("Error with beginning in heating state");
+			err = 1;
+		end
+		
+		
 		forever begin				//I'll just have it cycle temperatures from 0 to 31 and wrap around to check it works
 			#CLK_PERIOD;
 			temperature <= temperature + 5'b1;
+			if (temperature == 5'b11110) begin
+				temperature <= 5'b10011;
+			end
 		end
 				
 	end
 	//final test
 	initial begin
-        #100
+        #(50*CLK_PERIOD);
         if (err==0) begin
           $display("***TEST PASSED! :) ***");
         $finish;
