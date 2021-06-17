@@ -13,7 +13,6 @@ module top_tb();
 	parameter CLK_PERIOD = 10;
 	
 	//wires and regs
-	reg clk;
 	reg [4:0] temperature;
 	wire heating;
 	wire cooling;
@@ -27,11 +26,9 @@ module top_tb();
 	//clock generator
 	initial begin	//this sets the clock going from the start
    		clk_p = 1'b1;
-   		clk = 1'b0;
     	forever begin
     	   #(CLK_PERIOD/2);
     	   clk_p=~clk_p;
-    	   clk=~clk;
     	end
     end
     
