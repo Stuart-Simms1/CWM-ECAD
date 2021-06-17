@@ -6,6 +6,7 @@ set device xcvu9p-fsgd2104-2L-e
 set proj_dir ./project
 set repo_dir ./ip_repo
 set project_constraints constraints.xdc
+set proj_path [exec pwd]
 
 set test_name "test"
 
@@ -16,14 +17,17 @@ set_property top ${top} [current_fileset]
 puts "Creating Project"
 
 create_fileset -constrset -quiet constraints
+#add_files -fileset constraints -norecurse ${project_constraints}
+#set_property is_enabled false [get_files ${project_constraints}]
 
-#Todo: Add your IP here
-create_ip -name blk_mem_gen -vendor xilinx.com -library ip -version 8.4 -module_name blk_mem_gen_0
-set_property -dict [list CONFIG.Write_Width_A {24} CONFIG.Write_Depth_A {8} CONFIG.Read_Width_A {24} CONFIG.Operating_Mode_A {READ_FIRST} CONFIG.Write_Width_B {24} CONFIG.Read_Width_B {24} CONFIG.Load_Init_File {true} CONFIG.Coe_File {/home/centos/CWM-ECAD/Ex7/mem.coe}] [get_ips blk_mem_gen_0]
-#INFO: [IP_Flow 19-3484] Absolute path of file '/home/centos/CWM-ECAD/Ex6/mem.coe' provided. It will be converted relative to IP Instance files '../../../../mem.coe'
+#Put the IP in here
+create_ip -name blk_mem_gen -vendor xilinx.com -library ip -version 8.4 -module_name blk_mem_gen_1
+set_property -dict [list CONFIG.Write_Width_A {24} CONFIG.Write_Depth_A {8} CONFIG.Read_Width_A {24} CONFIG.Write_Width_B {24} CONFIG.Read_Width_B {24} CONFIG.Load_Init_File {true} CONFIG.Coe_File {/home/centos/CWM-ECAD/Ex7/mem.coe}] [get_ips blk_mem_gen_1]
 
 read_verilog "top.v"
 read_verilog "top_tb.v"
+read_verilog "converter.v"
+read_verilog "colours.v"
 
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
