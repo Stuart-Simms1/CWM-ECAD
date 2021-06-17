@@ -8,7 +8,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 `timescale 1ns / 100ps
 module top_tb();
-	//parameters
+
+	//Parameters
 	parameter CLK_PERIOD = 10;
 	
 	//wires and regs
@@ -19,8 +20,7 @@ module top_tb();
 	reg [1:0] state;
 	reg err;
 	
-	
-	//clock generation
+	//clock generator
 	initial begin	//this sets the clock going from the start
    		clk = 1'b0;
     	forever begin
@@ -29,37 +29,37 @@ module top_tb();
     	end
     end
     
-	//logic
+    //logic
 	initial begin			//Stores the state of the device
 		forever begin
-		state[1] = heating;
-		state[0] = cooling;
-		#CLK_PERIOD;
-		if(state == 2'b11) begin
-			$display("Error invalid state");
-			err = 1;
-		end
+			state[1] = heating;
+			state[0] = cooling;
+			#CLK_PERIOD;
+			if(state == 2'b11) begin
+				$display("Error invalid state");
+				err = 1;
+			end
 		end
 	end
 	
 	initial begin
 		err = 0;
 		temperature = 5'b11111;		//test for starting in cooling state
-		#CLK_PERIOD;
+		#(CLK_PERIOD*3);
 		if(state != 2'b01) begin
 			$display("Error with beginning in cooling state");
 			err=1;
 		end
 		
 		temperature = 5'b10100;
-		#CLK_PERIOD;
+		#(CLK_PERIOD<<1);
 		if(state != 2'b00) begin
 			$display("Error with beginning in idle state");
 			err = 1;
 		end
 		
 		temperature = 5'b00000;
-		#CLK_PERIOD;
+		#(CLK_PERIOD<<1);
 		if(state != 2'b10) begin
 			$display("Error with beginning in heating state");
 			err = 1;
@@ -75,6 +75,7 @@ module top_tb();
 		end
 				
 	end
+	
 	//final test
 	initial begin
         #(50*CLK_PERIOD);
