@@ -22,17 +22,22 @@ module selector (
 	input rst,
 	input button,
 	output reg [23:0]light);
+
 	//regs and wires
-	wire colour;
+	wire [2:0] colour;
+	wire [23:0] rgb;
+	
+	
+	//instantiate the modules
+	colours mycolours(.clk (clk), .rst (rst), .button (button), .colour (colour));
+	converter myconverter(.clk (clk), .colour (colour), .enable (sel), .rgb (rgb));
 	
 	always @ (posedge clk) begin
-		colours colours(.clk (clk), .rst (rst), .button (button), .colour (colour));
 		if(~sel) begin
-			light[23:0] <= 24'hFFFFFF;
+			light <= 24'hFFFFFF;
 		end
 		else begin 
-			converter Converter(.clk (clk), .colour (colour), .enable (1), .rgb (light));
+			light <= rgb;
 		end
 	end
-	
 endmodule
