@@ -19,19 +19,17 @@ module top_tb();
 	wire cooling;
 	reg [1:0] state;
 	reg err;
-	reg clk_n;
 	reg clk_p;
 	reg rst_n = 1'b0;
+	wire clk_n = ~clk_p;
 	
 	
 	//clock generator
 	initial begin	//this sets the clock going from the start
-   		clk_n = 1'b0;
    		clk_p = 1'b1;
    		clk = 1'b0;
     	forever begin
     	   #(CLK_PERIOD/2);
-    	   clk_n=~clk_n;
     	   clk_p=~clk_p;
     	   clk=~clk;
     	end
