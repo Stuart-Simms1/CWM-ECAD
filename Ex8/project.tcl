@@ -20,7 +20,8 @@ add_files -fileset constraints -norecurse ${project_constraints}
 set_property is_enabled true [get_files ${project_constraints}]
 
 read_verilog "top.v"
-#read_verilog "top_tb.v"
+read_verilog "top_tb.v"
+read_verilog "heater.v"
 
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
@@ -48,6 +49,7 @@ launch_runs synth
 wait_on_run synth
 launch_runs impl_1
 wait_on_run impl_1
+
 ## Usually we need the following steps, but we currently don't use the FPGA
 ## And it saves a lot of time
 #open_checkpoint ${design}.runs/impl_1/top_postroute_physopt.dcp

@@ -13,13 +13,21 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module top(
+module ACunit(
     input clk_p,
     input clk_n,
      //Todo: add all other ports besides clk_n and clk_p 
+	input rst_n,
+	input temperature_4,
+	input temperature_3,
+	input temperature_2,
+	input temperature_1,
+	input temperature_0,
+	output heating,
+	output cooling
    );
     
-
+	wire [4:0] temperature = {temperature_4, temperature_3, temperature_2, temperature_1, temperature_0};
    /* clock infrastructure, do not modify */
         wire clk_ibufds;
 
@@ -27,15 +35,20 @@ module top(
 	.I(clk_p),
 	.IB(clk_n),
 	.O(clk_ibufds)
-);
+	 );
 
      wire clk; //use this signal as a clock for your design
         
      BUFG bufg_clk (
-	.I  (clk_ibufds),
-	.O  (clk)
-      );
+	 .I  (clk_ibufds),
+	 .O  (clk)
+       );
 
-//Add logic here
-
+	//Add logic here
+	heater myheater(.rst_n (rst_n),
+	 .clk (clk),
+	 .temperature (temperature),
+	 .heating (heating),
+	 .cooling (cooling)
+	  );
 endmodule

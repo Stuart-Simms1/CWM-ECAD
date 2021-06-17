@@ -20,6 +20,7 @@ create_fileset -constrset -quiet constraints
 
 read_verilog "top.v"
 read_verilog "top_tb.v"
+read_verilog "heater.v"
 
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
