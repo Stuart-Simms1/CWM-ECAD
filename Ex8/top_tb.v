@@ -93,7 +93,7 @@ module top_tb();
     
     
     //Instance the module
-    ACunit top(
+    ACunit mytop(
     	.clk_n (clk_n),
     	.clk_p (clk_p),
     	.rst_n (rst_n),
