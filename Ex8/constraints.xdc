@@ -15,7 +15,6 @@ set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4           [current_design]
 set_property BITSTREAM.CONFIG.SPI_FALL_EDGE YES        [current_design]
 
 #############################################################################################################
-
 ## Timing Assertions Section
 # Primary clocks
 create_clock -name clk -period 10 [get_ports clk_p]
