@@ -19,8 +19,8 @@ create_fileset -constrset -quiet constraints
 add_files -fileset constraints -norecurse ${project_constraints}
 set_property is_enabled true [get_files ${project_constraints}]
 
-read_verilog "top.v"
 read_verilog "heater.v"
+read_verilog "top.v"
 
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
