@@ -16,8 +16,8 @@ set_property top ${top} [current_fileset]
 puts "Creating Project"
 
 create_fileset -constrset -quiet constraints
-add_files -fileset constraints -norecurse ${project_constraints}
-set_property is_enabled true [get_files ${project_constraints}]
+#add_files -fileset constraints -norecurse ${project_constraints}
+#set_property is_enabled true [get_files ${project_constraints}]
 
 
 create_ip -name blk_mem_gen -vendor xilinx.com -library ip -version 8.4 -module_name blk_mem_gen_2
@@ -32,6 +32,7 @@ read_verilog "converter.v"
 read_verilog "colours.v"
 read_verilog "lights.v"
 read_verilog "top.v"
+read_verilog "top_tb.v"
 
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1

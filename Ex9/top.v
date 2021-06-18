@@ -7,14 +7,19 @@ module smarthome(
 	input a,
     input b,
     input [3:0] func,
-    output out,
+    output out_1,
     input change,
 	input on_off,
-	input rst,
+	input rst_1,
 	input clk,
 	output [7:0] counter_out,
 	output [1:0] direction,
+	input c,
+	input d,
+	input sel_1,
+	output out,
 	input sel,
+	input rst,
 	input button,
 	output [23:0]light,
 	input clk_p,
@@ -29,7 +34,7 @@ module smarthome(
 	output cooling
 	);
 	
-	blinds(
+	blinds myblinds(
      .a(a),
      .b(b),
      .func(func),
@@ -37,41 +42,41 @@ module smarthome(
     );
     
 	
-	monitor (
+	monitor mymonitor(
 	 .change(change),
 	 .on_off(on_off),
-	 .rst(rst),
+	 .rst(rst_1),
 	 .clk(clk),
 	 .counter_out(counter_out),
 	 .direction(direction)
     );
 	
-	doorbell(
-	 .a(a),
-	 .b(b),
-	 .sel(sel),
+	doorbell mydoorbell(
+	 .a(c),
+	 .b(d),
+	 .sel(sel_1),
 	 .out(out)
     );
 	
-	lights (
-	input .clk(clk),
-	input .sel(sel),
-	input .rst(rst),
-	input .button(button),
-	outpu .light(light)
+	lights mylights(
+	 .clk(clk),
+	 .sel(sel),
+	 .rst(rst),
+	 .button(button),
+	 .light(light)
 	);
 	
-	ACunit(
-    input .clk_p(clk),
-    input .clk_n(~clk),
-	input .rst_n(rst),
-	input .temperature_4(temperature_4),
-	input .temperature_3(temperature_3),
-	input .temperature_2(temperature_2),
-	input .temperature_1(temperature_1),
-	input .temperature_0(temperature_0),
-	output .heating(heating),
-	output .cooling(cooling)
+	ACunit myACunit(
+     .clk_p(clk_p),
+     .clk_n(clk_n),
+	 .rst_n(rst_n),
+	 .temperature_4(temperature_4),
+	 .temperature_3(temperature_3),
+	 .temperature_2(temperature_2),
+	 .temperature_1(temperature_1),
+	 .temperature_0(temperature_0),
+	 .heating(heating),
+	 .cooling(cooling)
    );
 	
 	
