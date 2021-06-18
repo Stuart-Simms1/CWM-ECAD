@@ -59,6 +59,7 @@ set_property IOSTANDARD LVCMOS18 [get_ports {temperature_2}]
 set_property IOSTANDARD LVCMOS18 [get_ports {temperature_3}]
 set_property IOSTANDARD LVCMOS18 [get_ports {temperature_4}]
 
+
 #pullup constraints
 set_property PULLUP true [get_ports {rst_n}]
 
